@@ -45,7 +45,7 @@ async def main():
     
     print("\nResult:")
     for url, offset in zip(urls, results):
-        print(f"Файл: {url.split('/')[-1]} | IFD offset: {offset}")
+        print(f"File: {url.split('/')[-1]} | IFD offset: {offset}")
         
     print(f"\nTotal time: {total_time:.4f} сек")
 
