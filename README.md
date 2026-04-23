@@ -7,9 +7,6 @@ The massive performance boost was achieved by bypassing high-level GIS libraries
 
 1.  **Numba Integration:** Used JIT (Just-In-Time) compilation with **Numba** to process TIFF data at the byte level. This allows Python to run at near-C++ speeds when iterating over raw buffers.
 2.  **Raw Byte Reading:** Instead of using heavy wrappers like `rasterio` or `gdal`, the project reads the TIFF structure directly into memory, significantly reducing overhead.
-3.  **Smart Tile Caching:** Implemented a caching logic that keeps the current data fragment in memory, preventing redundant disk access for adjacent pixels.
-4.  **Mathematical Accuracy:** Optimized geographic-to-pixel mapping using the cosine of the latitude to ensure precision across different latitudes.
-
 
 ## 🛠 Installation
 
