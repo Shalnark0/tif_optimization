@@ -38,12 +38,12 @@ The project contains separate scripts to compare the performance. Run them indiv
 
 *   **Original Version (~55.0s):**
     ```bash
-    python matrix_test.py
+    python rasterio_parser.py
     ```
 
 *   **Optimized Version (~0.9s):**
     ```bash
-    python matrix_optimization.py
+    python numba_parser.py
     ```
 
 ## 📊 Benchmark Results
