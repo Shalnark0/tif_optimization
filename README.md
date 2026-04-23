@@ -12,7 +12,7 @@ The massive performance boost was achieved by bypassing high-level GIS libraries
 
 1.  **Clone the repository:**
     ```bash
-    git clone https://github.com
+    git clone https://github.com/Shalnark0/tif_optimization.git
     cd tif_optimization
     ```
 
