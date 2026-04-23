@@ -3,9 +3,13 @@
 This project demonstrates a significant performance optimization for extracting data from GeoTIFF files. By improving tile caching and coordinate calculation logic, the processing time was reduced from **55 seconds** to just **0.9 seconds** (a ~60x speedup).
 
 ## 🚀 Optimization Overview
-The performance boost was achieved through two main strategies:
-1.  **Tile Caching:** Instead of frequent disk I/O operations, the algorithm checks if the required coordinates fall within the currently loaded memory tile (`inCurrentTile`).
-2.  **Efficient Coordinate Mapping:** Optimized mathematical conversion between geographic degrees and meters using the cosine of the latitude for precise longitude scaling.
+The massive performance boost was achieved by bypassing high-level GIS libraries and implementing a low-level approach:
+
+1.  **Numba Integration:** Used JIT (Just-In-Time) compilation with **Numba** to process TIFF data at the byte level. This allows Python to run at near-C++ speeds when iterating over raw buffers.
+2.  **Raw Byte Reading:** Instead of using heavy wrappers like `rasterio` or `gdal`, the project reads the TIFF structure directly into memory, significantly reducing overhead.
+3.  **Smart Tile Caching:** Implemented a caching logic that keeps the current data fragment in memory, preventing redundant disk access for adjacent pixels.
+4.  **Mathematical Accuracy:** Optimized geographic-to-pixel mapping using the cosine of the latitude to ensure precision across different latitudes.
+
 
 ## 🛠 Installation
 
