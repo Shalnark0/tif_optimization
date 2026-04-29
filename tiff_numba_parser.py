@@ -2,7 +2,6 @@ import os
 import asyncio
 import numpy as np
 import time
-from zarr_numba_parser import safe_simd_crunch
 from numba import njit, prange
 
 def get_first_ifd_offset(data):
