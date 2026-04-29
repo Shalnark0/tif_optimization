@@ -3,6 +3,7 @@ import asyncio
 import numpy as np
 import time
 from zarr_numba_parser import safe_simd_crunch
+from numba import njit, prange
 
 def get_first_ifd_offset(data):
     endian = '<' if data[0:2] == b'II' else '>'
@@ -13,6 +14,17 @@ def get_first_ifd_offset(data):
     elif version == 43:
         return int(np.frombuffer(data[8:16], dtype=f'{endian}u8')[0])
     return 8
+
+@njit(parallel=True, fastmath=True, error_model='numpy')
+def safe_simd_crunch(data):
+    total = 0.0
+    for i in prange(data.size):
+        val = data[i]
+        # Процессор заменяет NaN на 0.0 без остановки конвейера (векторизованно)
+        clean_val = val if not np.isnan(val) else 0.0 
+        total += clean_val * clean_val
+    return total
+
 
 async def process_full_tiff_numba(file_path):
     try:
