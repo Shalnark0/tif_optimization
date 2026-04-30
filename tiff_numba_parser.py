@@ -19,7 +19,6 @@ def safe_simd_crunch(data):
     total = 0.0
     for i in prange(data.size):
         val = data[i]
-        # Процессор заменяет NaN на 0.0 без остановки конвейера (векторизованно)
         clean_val = val if not np.isnan(val) else 0.0 
         total += clean_val * clean_val
     return total
@@ -55,8 +54,7 @@ async def process_full_tiff_numba(file_path):
 
 
 async def main():
-    # Путь к вашим локальным файлам
-    folder = r"C:\Users\Nik\Desktop\elevation_xian"
+    folder = r""
     files = [os.path.join(folder, f) for f in os.listdir(folder) if f.endswith('.tif')]
     
     print(f"Parsing {len(files)} local files...")
