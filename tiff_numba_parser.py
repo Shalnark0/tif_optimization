@@ -29,15 +29,18 @@ async def process_full_tiff_numba(file_path):
         def read_and_compute():
             with open(file_path, 'rb') as f:
                 header = f.read(64)
+                
+                if len(header) < 64: return 0.0
+                
                 pixel_offset = get_first_ifd_offset(header)
                 
                 f.seek(pixel_offset)
                 
                 pixel_data = f.read()
                 
-                count = len(pixel_data) // 4
-                if count == 0: return 0.0
+                if not pixel_data: return 0.0
                 
+                count = len(pixel_data) // 4
                 pixels = np.frombuffer(pixel_data, dtype=np.float32, count=count)
                 
                 return float(safe_simd_crunch(pixels))
@@ -45,7 +48,10 @@ async def process_full_tiff_numba(file_path):
         loop = asyncio.get_event_loop()
         return await loop.run_in_executor(None, read_and_compute)
     except Exception as e:
-        return f"Error: {str(e)}"
+        
+        return 0.0
+
+
 
 
 
@@ -54,7 +60,7 @@ async def process_full_tiff_numba(file_path):
 
 
 async def main():
-    folder = r""
+    folder = r"c:\Users\Nik\Desktop\elevation_xian"
     files = [os.path.join(folder, f) for f in os.listdir(folder) if f.endswith('.tif')]
     
     print(f"Parsing {len(files)} local files...")

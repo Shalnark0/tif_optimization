@@ -6,7 +6,7 @@ import rasterio
 import numpy as np
 from tiff_numba_parser import process_full_tiff_numba, safe_simd_crunch
 
-DATA_PATH = DATA_PATH = r"" # Directory with tiff files
+DATA_PATH = DATA_PATH = r"c:\Users\Nik\Desktop\elevation_xian" # Directory with tiff files
 
 def get_file_list():
     return [os.path.join(DATA_PATH, f) for f in os.listdir(DATA_PATH) if f.endswith('.tif')]
