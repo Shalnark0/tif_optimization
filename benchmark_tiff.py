@@ -1,15 +1,22 @@
-import os
+
 import time
 import asyncio
 import tifffile
 import rasterio
 import numpy as np
 from tiff_numba_parser import process_full_tiff_numba, safe_simd_crunch
+from pathlib import Path
 
-DATA_PATH = DATA_PATH = r"c:\Users\Nik\Desktop\elevation_xian" # Directory with tiff files
+# Автоматически находит путь к рабочему столу текущего пользователя
+DATA_PATH = Path.home() / "Desktop" / "tiff_example"
 
 def get_file_list():
-    return [os.path.join(DATA_PATH, f) for f in os.listdir(DATA_PATH) if f.endswith('.tif')]
+    # Проверяем, существует ли папка, чтобы избежать ошибок
+    if not DATA_PATH.exists():
+        print(f"Ошибка: Папка {DATA_PATH} не найдена!")
+        return []
+    return [str(f) for f in DATA_PATH.glob('*.tiff')]
+
 
 
 def benchmark_tifffile(files):
