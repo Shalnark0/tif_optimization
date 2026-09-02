@@ -32,4 +32,4 @@ To evaluate pure CPU and Memory bandwidth scaling while eliminating OS I/O cachi
 I specialize in **Low-Level Python Optimization, High-Performance Computing (HPC), and Data Infrastructure Engineering**.
 If your team is burning cloud infrastructure budgets (AWS/GCP) on slow data pipelines, processing heavy raster/spatial data, or struggling with real-time computer vision data feeding — let's connect. I am open to remote contract roles or core engineering positions.
 * **Telegram:** @Truesi
-* **Email:** [Ваша почта]
+* **Email:** forlatotskiy@gmail.com
