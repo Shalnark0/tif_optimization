@@ -12,7 +12,7 @@ To evaluate pure CPU and Memory bandwidth scaling while eliminating OS I/O cachi
 | :--- | :--- | :--- |
 | **`tifffile`** | 71.37 ms | 1x (Baseline) |
 | **`rasterio`** | 42.33 ms | 1.68x |
-| **Our Optimized Numba Engine** | **0.59 ms** | **120.9x Speedup** |
+| **Optimized Numba Engine** | **0.59 ms** | **120.9x Speedup** |
 *Note: The system achieves sub-millisecond execution times on a multi-resolution image batch. While compressed data blocks (LZW/JPEG) are limited by deterministic CPU decompression algorithms (yielding a steady 1.5x–2x boost), raw/uncompressed workflows completely obliterate standard runtime overhead, dropping execution costs near to bare-metal hardware limits.*
 ## 🛠 Architectural Highlights & Engineering Decisions
 1. **Zero-Overhead Memory Layout:** Python object creation inside the reading loop is completely eliminated. Data flows through strict low-level buffers directly into NumPy array structures via `np.frombuffer`.
