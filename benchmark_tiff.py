@@ -1,23 +1,18 @@
-
 import time
 import asyncio
 import tifffile
 import rasterio
 import numpy as np
-from tiff_numba_parser import process_full_tiff_numba, safe_simd_crunch
+from tiff_numba_parser import process_full_tiff_numba, safe_simd_crunch_uint8
 from pathlib import Path
 
-# Автоматически находит путь к рабочему столу текущего пользователя
-DATA_PATH = Path.home() / "Desktop" / "tiff_example"
+DATA_PATH = Path(__file__).resolve().parent / "tiff_example"
 
 def get_file_list():
-    # Проверяем, существует ли папка, чтобы избежать ошибок
     if not DATA_PATH.exists():
-        print(f"Ошибка: Папка {DATA_PATH} не найдена!")
+        print(f"Error: Directory {DATA_PATH} not found!")
         return []
     return [str(f) for f in DATA_PATH.glob('*.tiff')]
-
-
 
 def benchmark_tifffile(files):
     start = time.perf_counter()
@@ -28,7 +23,9 @@ def benchmark_tifffile(files):
                 data = tif.asarray()
                 res = np.sum(np.square(data.astype(np.float64)))
                 count += 1
-        except Exception: continue
+        except Exception as e: 
+            print(f"Tifffile error on {Path(f).name}: {e}") 
+            continue
     return time.perf_counter() - start, count
 
 def benchmark_rasterio(files):
@@ -40,24 +37,23 @@ def benchmark_rasterio(files):
                 data = src.read(1)
                 res = np.sum(np.square(data.astype(np.float64)))
                 count += 1
-        except Exception: continue
+        except Exception as e: 
+            print(f"Rasterio error on {Path(f).name}: {e}") 
+            continue
     return time.perf_counter() - start, count
 
-
 async def benchmark_my_tech(files):
-    safe_simd_crunch(np.zeros(10, dtype=np.float32))
+    safe_simd_crunch_uint8(np.zeros(10, dtype=np.uint8))
     start = time.perf_counter()
     tasks = [process_full_tiff_numba(f) for f in files]
     results = await asyncio.gather(*tasks)
     
-    for r in results:
-        if isinstance(r, str) and "Error" in r:
-            print(f"Example of error in parser: {r}")
-            break
+    errors = [r for r in results if isinstance(r, str) and "Error" in r]
+    if errors:
+        print(f"Parser failed on {len(errors)} files. First error example: {errors[0]}")
             
     success_count = sum(1 for r in results if not isinstance(r, str))
     return time.perf_counter() - start, success_count
-
 
 if __name__ == "__main__":
     all_files = get_file_list()
@@ -66,21 +62,21 @@ if __name__ == "__main__":
     if not all_files:
         print("Files not found")
     else:
-        # 1. Tifffile
         t_tiff, c_tiff = benchmark_tifffile(all_files)
-        print(f"Tifffile: {t_tiff:.4f} сек")
+        print(f"Tifffile: {t_tiff:.4f} sec (success: {c_tiff})")
         
-        # 2. Rasterio
         t_rast, c_rast = benchmark_rasterio(all_files)
-        print(f"Rasterio: {t_rast:.4f} сек")
+        print(f"Rasterio: {t_rast:.4f} sec (success: {c_rast})")
         
         t_my, c_my = asyncio.run(benchmark_my_tech(all_files))
-        print(f"Technology: {t_my:.4f} сек")
+        print(f"Technology: {t_my:.4f} sec (success: {c_my})")
         
         print("\n" + "="*30)
         print(f"AVERAGE TIME ON FILE:")
-        print(f"Tifffile:  {(t_tiff/c_tiff)*1000:7.2f} ms")
-        print(f"Rasterio:  {(t_rast/c_rast)*1000:7.2f} ms")
-        print(f"Technology:  {(t_my/c_my)*1000:7.2f} ms")
+        print(f"Tifffile:  {(t_tiff/c_tiff)*1000 if c_tiff else 0:7.2f} ms")
+        print(f"Rasterio:  {(t_rast/c_rast)*1000 if c_rast else 0:7.2f} ms")
+        print(f"Technology:  {(t_my/c_my)*1000 if c_my else 0:7.2f} ms")
         print("="*30)
-        print(f"Advantage: в {t_rast/t_my:.1f} times faster than rasterio")
+        if t_my > 0:
+            print(f"Advantage: {t_rast/t_my:.1f} times faster than rasterio")
+
