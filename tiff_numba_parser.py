@@ -57,7 +57,7 @@ def get_file_list():
     return [str(f) for f in DATA_PATH.glob('*.tiff')]
 
 async def main(): 
-    warmup_data = np.zeros(10, dtype=np.uint8) 
+    warmup_data = np.zeros(1, dtype=np.uint8) 
     safe_simd_crunch_uint8(warmup_data) 
     
     all_files = get_file_list()
