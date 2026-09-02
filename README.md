@@ -25,7 +25,7 @@ To evaluate pure CPU and Memory bandwidth scaling while eliminating OS I/O cachi
 * **Target Hardware Context:** Systems with limited processing budgets per frame (e.g., Real-time 60 FPS / 120 FPS data feeds).
 ## 🧑‍💻 How to Reproduce
 1. Clone the repository.
-2. Ensure you have requirements installed: `pip install numba numpy rasterio tifffile matplotlib`.
+2. Ensure you have requirements installed: `pip install -r requirements.txt`.
 3. Run the benchmark script to verify the execution metrics on your local machine.
 ---
 ## 🎯 Contact & Collaboration
