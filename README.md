@@ -8,7 +8,7 @@ To evaluate pure CPU and Memory bandwidth scaling while eliminating OS I/O cachi
 * **Batch Size:** 4 raw, uncompressed TIFF files
 * **Composition:** 3 × FullHD (1920x1080) tiles + 1 × 4K UHD (3840x2160) tile (~50MB)
 ### Batch Execution Performance (Total Latency):
-![TIFF Performance Benchmark](tiff_optimized_performance.png)
+![TIFF Performance Benchmark](tiff_reading_comparison.png)
 | Engine / Library | Total Batch Latency | Relative Throughput |
 | :--- | :--- | :--- |
 | **`tifffile`** | 80 ms | 1x (Baseline) |
