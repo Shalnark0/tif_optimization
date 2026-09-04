@@ -26,21 +26,19 @@ def safe_simd_crunch_uint8(data_uint8):
 
 async def process_full_tiff_numba(file_path):
     try:
-        def read_and_compute():
-            with open(file_path, 'rb') as f:
-                header = f.read(64)
-                if len(header) < 64:
-                    return 0.0
-                
-                pixel_offset = get_first_ifd_offset(header)
-                
-                f.seek(pixel_offset)
-                pixel_data = f.read()
-                if not pixel_data:
-                    return 0.0
-                
-                pixels = np.frombuffer(pixel_data, dtype=np.uint8).copy()
-                
+        with open(file_path, 'rb') as f:
+            header = f.read(64)
+            if len(header) < 64:
+                return 0.0
+            
+            pixel_offset = get_first_ifd_offset(header)
+            
+            f.seek(pixel_offset)
+            
+            pixels = np.fromfile(f, dtype=np.uint8)
+            if pixels.size == 0:
+                return 0.0
+            
             return float(safe_simd_crunch_uint8(pixels))
 
         loop = asyncio.get_running_loop() 
